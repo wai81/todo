@@ -30,6 +30,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
     // датасорс обязательно нужно создавать для таблицы,
     // в него присваивается любой источник (БД, массивы, JSON и пр.)
     this.dataSource = new MatTableDataSource();
+
     this.refreshTable();
   }
 
@@ -56,14 +57,15 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
   // показывает задачи с применением всех текущий условий (категория, поиск, фильтры и пр.)
   private refreshTable() {
+
     this.dataSource.data = this.tasks; // обновить источник данных (т.к. данные массива tasks обновились)
+
     this.addTableObjects();
 
     // когда получаем новые данные..
     // чтобы можно было сортировать по столбцам "категория" и "приоритет", т.к. там не примитивные типы, а объекты
     // @ts-ignore - показывает ошибку для типа даты, но так работает, т.к. можно возвращать любой тип
     this.dataSource.sortingDataAccessor = (task, colName) => {
-
       // по каким полям выполнять сортировку для каждого столбца
       switch (colName) {
         case 'priority': {

@@ -78,11 +78,9 @@
 
 
       <!--  заголовок таблицы-->
-      <tr *matHeaderRowDef="displayedColumns; "
-          mat-header-row></tr>
+      <tr *matHeaderRowDef="displayedColumns;" mat-header-row></tr>
       <!--  строки таблицы - набор строк из тегов td (порядок указывается в переменной displayedColumns) -->
-      <tr *matRowDef="let row; columns: displayedColumns;"
-          mat-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
     </table>
     <!--  пагинация  -->
     <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
