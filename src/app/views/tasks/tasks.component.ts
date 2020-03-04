@@ -14,7 +14,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
   // поля для таблицы (те, что отображают данные из задачи - должны совпадать с названиями переменных класса)
   private displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
-  private dataSource: MatTableDataSource<Task>; // контейнер - источник данных для таблицы
+  private dataSource: MatTableDataSource<Task>; //  источник данных для таблицы
 
   // ссылки на компоненты таблицы
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
