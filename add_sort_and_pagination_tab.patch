@@ -1,0 +1,242 @@
+Index: src/app/views/tasks/tasks.component.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/app/views/tasks/tasks.component.ts	(revision 3ae7446e0dd2bfbe281c2b12aa395f4ced1ac49b)
++++ src/app/views/tasks/tasks.component.ts	(date 1583615734937)
+@@ -2,8 +2,8 @@
+ import {Task} from '../../model/Task';
+ import {DataHandlerService} from '../../service/data-handler.service';
+ import {MatTableDataSource} from '@angular/material/table';
+-import {MatPaginator} from '@angular/material/paginator';
+ import {MatSort} from '@angular/material/sort';
++import {MatPaginator} from '@angular/material/paginator';
+ 
+ @Component({
+   selector: 'app-tasks',
+@@ -11,14 +11,12 @@
+   styleUrls: ['./tasks.component.css']
+ })
+ export class TasksComponent implements OnInit, AfterViewInit {
+-
+   // поля для таблицы (те, что отображают данные из задачи - должны совпадать с названиями переменных класса)
+-  private displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
+-  private dataSource: MatTableDataSource<Task>; //  источник данных для таблицы
++  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
++  dataSource: MatTableDataSource<Task>; // контейнер - источник данных для таблицы
+ 
+-  // ссылки на компоненты таблицы
+-  @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
+-  @ViewChild(MatSort, {static: false}) private sort: MatSort;
++  @ViewChild(MatSort, {static: true}) sort: MatSort;
++  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+ 
+   tasks: Task[];
+ 
+@@ -34,7 +32,8 @@
+     this.refreshTable();
+   }
+ 
+-  // в этом методе уже все проинциализировано, поэтому можно присваивать объекты (иначе может быть ошибка undefined)
++  // метод позволяет проиницлировать объекты и добаляет возможность
++  // (сортировки и пагинации) поле загрузки данных
+   ngAfterViewInit(): void {
+     this.addTableObjects();
+   }
+@@ -47,7 +46,7 @@
+   getPriorityColor(task: Task) {
+     // цвет завершенной задачи
+     if (task.completed) {
+-      return '#8f8f8f'; // TODO вынести цвета в константы (magic strings, magic numbers)
++      return '#9f9f9f'; // TODO вынести цвета в константы (magic strings, magic numbers)
+     }
+     if (task.priority && task.priority.color) {
+       return task.priority.color;
+@@ -57,35 +56,33 @@
+ 
+   // показывает задачи с применением всех текущий условий (категория, поиск, фильтры и пр.)
+   private refreshTable() {
+-
+     this.dataSource.data = this.tasks; // обновить источник данных (т.к. данные массива tasks обновились)
+-
+     this.addTableObjects();
+ 
+     // когда получаем новые данные..
+     // чтобы можно было сортировать по столбцам "категория" и "приоритет", т.к. там не примитивные типы, а объекты
+     // @ts-ignore - показывает ошибку для типа даты, но так работает, т.к. можно возвращать любой тип
+     this.dataSource.sortingDataAccessor = (task, colName) => {
+-      // по каким полям выполнять сортировку для каждого столбца
+       switch (colName) {
+-        case 'priority': {
++        case 'priority' : {
+           return task.priority ? task.priority.id : null;
+         }
+-        case 'category': {
++        case 'category' : {
+           return task.category ? task.category.title : null;
+         }
+-        case 'date': {
++        case 'date' : {
+           return task.date ? task.date : null;
+         }
+-        case 'title': {
+-          return task.title;
++        case 'title' : {
++          return task.title ? task.title : null;
+         }
++
+       }
+     };
+   }
+ 
+   private addTableObjects() {
+-    this.dataSource.sort = this.sort; // компонент для сортировки данных (если необходимо)
+-    this.dataSource.paginator = this.paginator; // обновить компонент постраничности (кол-во записей, страниц)
++    this.dataSource.paginator = this.paginator;
++    this.dataSource.sort = this.sort;
+   }
+ }
+Index: src/app/views/tasks/tasks.component.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/app/views/tasks/tasks.component.html	(revision 3ae7446e0dd2bfbe281c2b12aa395f4ced1ac49b)
++++ src/app/views/tasks/tasks.component.html	(date 1583616097026)
+@@ -2,7 +2,7 @@
+   <div class="card-header card-header-warning">
+     <h4 class="card-title">Список задач</h4>
+   </div>
+-  <div *ngIf="tasks.length > 0" class="card-body table-responsive">
++  <div class="card-body table-responsive">
+ 
+     <table [dataSource]="dataSource" mat-table matSort>
+ 
+@@ -10,80 +10,73 @@
+       <ng-container matColumnDef="color">
+         <th *matHeaderCellDef mat-header-cell></th>
+         <td *matCellDef="let task" [style.background-color]="getPriorityColor(task)" class="col-color"
+-            mat-cell></td>
++            mat-cell>
++        </td>
+       </ng-container>
+ 
+       <!--   нумерация строк   -->
+       <ng-container matColumnDef="id">
+         <th *matHeaderCellDef mat-header-cell></th>
+-        <td *matCellDef="let index = index;" class="col-id" mat-cell>
++        <td *matCellDef="let index = index;"
++            class="col-id" mat-cell>
++
+           {{index + 1}}
++
+         </td>
+       </ng-container>
+ 
+-      <!--   Название
+-      mat-sort-header - признак сортировки столбца
+-      -->
++      <!--   Название   -->
+       <ng-container matColumnDef="title">
+         <th *matHeaderCellDef mat-header-cell mat-sort-header>Название</th>
+-        <td *matCellDef="let task"
+-            [class.completed]="task.completed" class="col-title"
+-            mat-cell>
++        <td *matCellDef="let task" [class.completed]="task.completed"
++            class="col-title" mat-cell>
++
+           {{task.title}}
++
+         </td>
+       </ng-container>
+ 
+-      <!--   Дата выполнения
+-      mat-sort-header - признак сортировки столбца
+-      -->
++      <!--   Дата выполнения   -->
+       <ng-container matColumnDef="date">
+         <th *matHeaderCellDef mat-header-cell mat-sort-header>Срок</th>
+-        <td *matCellDef="let task"
+-            [ngClass]="{'completed':task.completed,
+-                        'novalue':task.date == null}"
+-            class="col-date"
+-            mat-cell>
+-          {{task.date ? (task.date | date: "medium") : "Без даты"}}
++        <td *matCellDef="let task" [ngClass]="{'completed':task.completed, 'nodate':task.date == null}"
++            class="col-date" mat-cell>
++
++          {{task.date | date: "medium"}}
++
+         </td>
+       </ng-container>
+ 
+-      <!--   Приоритет
+-         mat-sort-header - признак сортировки столбца
+-      -->
++      <!--   Приоритет   -->
+       <ng-container matColumnDef="priority">
+         <th *matHeaderCellDef mat-header-cell mat-sort-header>Приоритет</th>
+-        <td *matCellDef="let task"
+-            [ngClass]="{'completed': task.completed,
+-                        'novalue': task.priority == null}"
+-            class="col-priority"
+-            mat-cell>
++        <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nopriority': task.priority == null}"
++            class="col-priority" mat-cell>
++
+           {{task.priority ? task.priority.title : "Без приоритета"}}
++
+         </td>
+       </ng-container>
+ 
+-      <!--   категория
+-      mat-sort-header - признак сортировки столбца
+-      -->
++      <!--   категория   -->
+       <ng-container matColumnDef="category">
+         <th *matHeaderCellDef mat-header-cell mat-sort-header>Категория</th>
+-        <td *matCellDef="let task"
+-            [ngClass]="{'completed':task.completed,
+-                        'novalue':task.category == null,
+-                        'link': !task.completed && task.category}"
+-            class="col-category"
++        <td *matCellDef="let task" [ngClass]="{'completed':task.completed, 'nocategory':task.category == null,
++            'link': !task.completed && task.category}" class="col-category"
+             mat-cell>
++
+           {{task.category ? task.category.title : "Без категории"}}
++
+         </td>
+       </ng-container>
+ 
+ 
+       <!--  заголовок таблицы-->
+-      <tr *matHeaderRowDef="displayedColumns;" mat-header-row></tr>
++      <tr *matHeaderRowDef="displayedColumns; " mat-header-row></tr>
+       <!--  строки таблицы - набор строк из тегов td (порядок указывается в переменной displayedColumns) -->
+       <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+     </table>
+-    <!--  пагинация  -->
+-    <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
++    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+   </div>
+-  <div *ngIf="tasks.length ==0 "><p class="not-found">Ничего не найдено</p></div>
++  <div *ngIf="tasks.length == 0"><p class="not-found">Ничего не найдено</p></div>
+ </div>
+Index: src/styles.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/styles.css	(revision 3ae7446e0dd2bfbe281c2b12aa395f4ced1ac49b)
++++ src/styles.css	(date 1583615521241)
+@@ -4,7 +4,7 @@
+ @import "~bootstrap-css-only/css/bootstrap.min.css";
+ 
+ .not-found {
+-  margin: 30px;
++  margin-top: 30px;
+   font-size: 20px;
+   color: rgba(74, 74, 74, 0.98);
+   text-align: center;

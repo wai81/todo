@@ -4,7 +4,7 @@
 @import "~bootstrap-css-only/css/bootstrap.min.css";
 
 .not-found {
-  margin: 30px;
+  margin-top: 30px;
   font-size: 20px;
   color: rgba(74, 74, 74, 0.98);
   text-align: center;
