@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Task} from '../../model/Task';
 import {DataHandlerService} from '../../service/data-handler.service';
 import {MatTableDataSource} from '@angular/material/table';
@@ -18,8 +18,18 @@ export class TasksComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-  @Input()
   tasks: Task[];
+
+  @Output()
+  updateTask = new EventEmitter<Task>();
+
+// текущие задачи для отображения на странице
+  @Input('tasks')
+  private set setTasks(tasks: Task[]) {
+    // не присваевается значение напрямую только через @Input
+    this.tasks = tasks;
+    this.fillTable();
+  }
 
   constructor(private dataHandler: DataHandlerService) {
   }
@@ -50,8 +60,20 @@ export class TasksComponent implements OnInit {
     return '#fff'; // TODO вынести цвета в константы (magic strings, magic numbers)
   }
 
+  onClickTask(task: Task) {
+    this.updateTask.emit(task);
+  }
+
+  private addTableObjects() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
   // показывает задачи с применением всех текущий условий (категория, поиск, фильтры и пр.)
   private fillTable() {
+    if (!this.dataSource) {
+      return;
+    }
     this.dataSource.data = this.tasks; // обновить источник данных (т.к. данные массива tasks обновились)
     this.addTableObjects();
 
@@ -75,10 +97,5 @@ export class TasksComponent implements OnInit {
 
       }
     };
-  }
-
-  private addTableObjects() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 }
