@@ -75,6 +75,10 @@ export class TasksComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       // обработка результата
+      if (result as Task) { // нажали ОК и есть результат
+        this.updateTask.emit(task);
+        return;
+      }
     });
   }
 

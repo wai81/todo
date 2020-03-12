@@ -11,7 +11,10 @@ import {DataHandlerService} from '../../service/data-handler.service';
 export class EditTaskDialogComponent implements OnInit {
 
   private dialogTitle: string; // заголовог диалога
-  private task: Task; // задача для раедактирования
+  private task: Task;
+  private tmpTitle: string;
+
+  // задача для раедактирования
 
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>, // для работы с текущим диалоговыи окном
@@ -27,8 +30,24 @@ export class EditTaskDialogComponent implements OnInit {
     this.task = this.data[0]; // задача для редактирования/создания
     this.dialogTitle = this.data[1]; // текст для диалогового окна
 
-    console.log(this.task);
-    console.log(this.dialogTitle);
+    // инициализация начальных значений (записывам в отдельные переменные
+    // чтобы можно было отменить изменения, а то будут сразу записываться в задачу)
+    this.tmpTitle = this.task.title;
   }
 
+  // нажатие кнопки сохранить
+  onConfirm(): void {
+
+    // считываем все значения для сохранения в поля задачи
+    this.task.title = this.tmpTitle;
+
+    // передаем добавленную/измененную задачу в обработчик
+    // что с ним будут делать - уже на задача этого компонента
+    this.dialogRef.close(this.task);
+  }
+
+  // нажатие кнопки
+  onCancel(): void {
+    this.dialogRef.close(null);
+  }
 }
