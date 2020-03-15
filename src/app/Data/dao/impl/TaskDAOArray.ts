@@ -38,15 +38,11 @@ export class TaskDAOArray implements TaskDAO {
     return undefined;
   }
 
+  // поиск задач по параметрам
+  // если значение null - параметр не нужно учитывать при поиске
   search(category: Category, searchText: string,
          status: boolean, priority: Priority): Observable<Task[]> {
     return of(this.searchTasks(category, searchText, status, priority));
-  }
-
-  update(task: Task): Observable<Task> {
-    const taskTmp = TestData.tasks.find(t => t.id === task.id); // обновление по id
-    TestData.tasks.splice(TestData.tasks.indexOf(taskTmp), 1, task);
-    return of(task);
   }
 
   private searchTasks(category: Category, searchText: string,
@@ -59,4 +55,16 @@ export class TaskDAOArray implements TaskDAO {
     }
     return allTasks; // отфильтрованный массив
   }
+
+  update(task: Task): Observable<Task> {
+
+    const taskTmp = TestData.tasks.find(t => t.id === task.id); // обновляем по id
+    TestData.tasks.splice(TestData.tasks.indexOf(taskTmp), 1, task);
+
+    return of(task);
+
+  }
+
+
 }
+

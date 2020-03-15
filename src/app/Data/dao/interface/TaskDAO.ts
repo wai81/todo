@@ -19,4 +19,5 @@ export interface TaskDAO extends CommonDAO<Task> {
 
   // количество всех задач
   getTotalCount(): Observable<number>;
+
 }

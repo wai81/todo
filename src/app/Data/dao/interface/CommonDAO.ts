@@ -15,5 +15,5 @@ export interface CommonDAO<T> {
   add(T): Observable<T>;
 
 // обновить(редактровать) значение
-  update(): Observable<T>;
+  update(T): Observable<T>;
 }
