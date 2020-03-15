@@ -40,10 +40,10 @@
       <!--   Дата выполнения   -->
       <ng-container matColumnDef="date">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Срок</th>
-        <td *matCellDef="let task" [ngClass]="{'completed':task.completed, 'nodate':task.date == null}"
+        <td *matCellDef="let task" [ngClass]="{'completed':task.completed, 'novalue':task.date == null}"
             class="col-date" mat-cell>
 
-          {{task.date | date: "medium"}}
+          {{task.date | taskDate}}
 
         </td>
       </ng-container>
@@ -51,7 +51,7 @@
       <!--   Приоритет   -->
       <ng-container matColumnDef="priority">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Приоритет</th>
-        <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nopriority': task.priority == null}"
+        <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'novalue': task.priority == null}"
             class="col-priority" mat-cell>
 
           {{task.priority ? task.priority.title : "Без приоритета"}}
@@ -62,7 +62,7 @@
       <!--   категория   -->
       <ng-container matColumnDef="category">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Категория</th>
-        <td *matCellDef="let task" [ngClass]="{'completed':task.completed, 'nocategory':task.category == null,
+        <td *matCellDef="let task" [ngClass]="{'completed':task.completed, 'novalue':task.category == null,
             'link': !task.completed && task.category}" class="col-category"
             mat-cell>
 
