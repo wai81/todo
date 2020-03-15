@@ -7,13 +7,22 @@ import {CategoryDAOArray} from '../Data/dao/impl/CategoryDAOArray';
 import {Priority} from '../model/Priority';
 import {PriorityDAOArray} from '../Data/dao/impl/PriorityDAOArray';
 
+// класс реализовывает методы, которые нужны frontend'у, т.е. для удобной работы представлений
+// напоминает паттер Фасад (Facade) - выдает только то, что нужно для функционала
+// сервис не реализовывает напрямую интерфейсы DAO, а использует их реализации (в данном случае массивы)
+// может использовать не все методы DAO, а только нужные
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class DataHandlerService {
-  taskDaoArray = new TaskDAOArray();
-  categoryDaoArray = new CategoryDAOArray();
-  priorityDaoArray = new PriorityDAOArray();
+
+  // релизации работы с данными с помощью массива
+  // (можно подставлять любые релизации, в том числе с БД. Главное - соблюдать интерфейсы)
+  private taskDaoArray = new TaskDAOArray();
+  private categoryDaoArray = new CategoryDAOArray();
+  private priorityDaoArray = new PriorityDAOArray();
 
   constructor() {
   }
@@ -26,6 +35,10 @@ export class DataHandlerService {
     return this.categoryDaoArray.getAll();
   }
 
+  getAllPriorities(): Observable<Priority[]> {
+    return this.priorityDaoArray.getAll();
+  }
+
   updateTask(task: Task): Observable<Task> {
     return this.taskDaoArray.update(task);
   }
@@ -35,5 +48,4 @@ export class DataHandlerService {
               status: boolean, priority: Priority): Observable<Task[]> {
     return this.taskDaoArray.search(category, searchText, status, priority);
   }
-
 }

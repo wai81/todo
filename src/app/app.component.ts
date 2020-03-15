@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
 
   }
 
+  // обновление задачи
   onUpdateTask(task: Task) {
     this.dataHandler.updateTask(task).subscribe(() => {
 

@@ -15,7 +15,27 @@
             *ngIf="tmpTitle.trim().length > 0" aria-label="Clear" class="size25"
             mat-button mat-icon-button matSuffix>
       <mat-icon>clear</mat-icon>
-    </button>
+    </button><!--    кнопка очистить стороку Название-->
+  </mat-form-field>
+  <!--    выпадающий список категорий-->
+  <mat-form-field>
+    <mat-label>Укажите категорию</mat-label>
+    <mat-select [(ngModel)]="tmpCategory">
+      <mat-option [value]="null">Без категории</mat-option>
+      <mat-option *ngFor="let cat of categories" [value]="cat">
+        {{cat.title}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!--    выпадающий список приоритета-->
+  <mat-form-field>
+    <mat-label>Укажите приоритет</mat-label>
+    <mat-select [(ngModel)]="tmpPriority">
+      <mat-option [value]="null">Без приоритета</mat-option>
+      <mat-option *ngFor="let p of priorities" [value]="p">
+        {{p.title}}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 </mat-dialog-content>
 <!--  кнопки возможных действий-->
