@@ -23,6 +23,8 @@ export class TasksComponent implements OnInit {
   tasks: Task[];
 
   @Output()
+  deleteTask = new EventEmitter<Task>();
+  @Output()
   updateTask = new EventEmitter<Task>();
 
 // текущие задачи для отображения на странице
@@ -75,10 +77,28 @@ export class TasksComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       // обработка результата
+      if (result === 'complete') {
+        task.completed = true; // ставим статус задачи выполняются
+        this.updateTask.emit(task);
+        return;
+      }
+
+      if (result === 'activate') {
+        task.completed = false; // ставим статус задачи не выполняется
+        this.updateTask.emit(task);
+        return;
+      }
+
+      if (result === 'delete') {
+        this.deleteTask.emit(task);
+        return;
+      }
+
       if (result as Task) { // нажали ОК и есть результат
         this.updateTask.emit(task);
         return;
       }
+
     });
   }
 

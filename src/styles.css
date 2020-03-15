@@ -22,6 +22,14 @@
   width: 100%;
 }
 
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
 .mat-dialog-content {
   padding: 40px !important;
 }
