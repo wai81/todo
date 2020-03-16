@@ -26,7 +26,9 @@ export class AppComponent implements OnInit {
 
   // изменение категории
   onSelectCategory(category: Category) {
+
     this.selectedCategory = category;
+
     this.dataHandler.searchTasks(
       this.selectedCategory,
       null,

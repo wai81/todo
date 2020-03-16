@@ -33,3 +33,8 @@
 .mat-dialog-content {
   padding: 40px !important;
 }
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
+}

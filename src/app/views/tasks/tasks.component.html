@@ -62,8 +62,11 @@
       <!--   категория   -->
       <ng-container matColumnDef="category">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Категория</th>
-        <td *matCellDef="let task" [ngClass]="{'completed':task.completed, 'novalue':task.category == null,
-            'link': !task.completed && task.category}" class="col-category"
+        <td (click)="!task.completed && task.category && onSelectCategory(task.category)"
+            *matCellDef="let task"
+            [ngClass]="{'completed':task.completed, 'novalue':task.category == null, 'link': !task.completed && task.category}"
+            class="col-category"
+
             mat-cell>
 
           {{task.category ? task.category.title : "Без категории"}}
@@ -71,6 +74,42 @@
         </td>
       </ng-container>
 
+      <!--    доступные действия над задачей  -->
+      <ng-container matColumnDef="operations">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let task" [class.completed]="task.completed" class="col-operations" mat-cell>
+          <button (click)="openDeleteDialog(task)" class="delete-icon"
+                  mat-icon-button
+          >
+            <mat-icon aria-hidden="false">delete</mat-icon>
+          </button>
+
+          <button (click)="openEditTaskDialog(task)" class="edit-icon"
+                  mat-icon-button
+          >
+            <mat-icon aria-hidden="false">edit</mat-icon>
+          </button>
+        </td>
+
+      </ng-container>
+      <!--    галокчка для выполнения задачи  -->
+      <ng-container matColumnDef="select">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let task" class="col-select text-right" mat-cell>
+
+          <mat-checkbox
+            (change)="$event ? onToggleStatus(task) : null"
+
+            (click)="$event.stopImmediatePropagation()"
+
+            [checked]="task.completed"
+          >
+
+          </mat-checkbox>
+
+        </td>
+
+      </ng-container>
 
       <!--  заголовок таблицы-->
       <tr *matHeaderRowDef="displayedColumns; " mat-header-row></tr>

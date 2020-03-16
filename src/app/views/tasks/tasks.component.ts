@@ -6,6 +6,8 @@ import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatDialog} from '@angular/material/dialog';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
+import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
+import {Category} from '../../model/Category';
 
 @Component({
   selector: 'app-tasks',
@@ -14,7 +16,7 @@ import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-d
 })
 export class TasksComponent implements OnInit {
   // поля для таблицы (те, что отображают данные из задачи - должны совпадать с названиями переменных класса)
-  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
+  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   dataSource: MatTableDataSource<Task>; // контейнер - источник данных для таблицы
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -24,8 +26,12 @@ export class TasksComponent implements OnInit {
 
   @Output()
   deleteTask = new EventEmitter<Task>();
+
   @Output()
   updateTask = new EventEmitter<Task>();
+
+  @Output()
+  selectCategory = new EventEmitter<Category>(); // при нажатии на категорию из списка задач
 
 // текущие задачи для отображения на странице
   @Input('tasks')
@@ -50,10 +56,6 @@ export class TasksComponent implements OnInit {
     this.fillTable();
   }
 
-  toggleTaskCompleted(task: Task) {
-    task.completed = !task.completed;
-  }
-
   // в зависимости от статуса задачи - вернуть цвет названия
   getPriorityColor(task: Task): string {
     // цвет завершенной задачи
@@ -66,11 +68,7 @@ export class TasksComponent implements OnInit {
     return '#fff'; // TODO вынести цвета в константы (magic strings, magic numbers)
   }
 
-  onClickTask(task: Task) {
-    this.updateTask.emit(task);
-  }
-
-// диалоговое окно для редактирования и добавления задачи
+  // диалоговое окно для редактирования и добавления задачи
   openEditTaskDialog(task: Task): void {
 
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Редактирование задачи'], autoFocus: false});
@@ -135,5 +133,32 @@ export class TasksComponent implements OnInit {
   private addTableObjects(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  // диалоговое окно подтверждения удаления
+  openDeleteDialog(task: Task) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '500px',
+      data: {
+        dialogTitle: 'Подтвердите действие',
+        message: `Вы действительно хотите удалить задачу: "${task.title}"?`
+      },
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteTask.emit(task); // нажали удалить
+      }
+    });
+  }
+
+  onToggleStatus(task: Task) {
+    task.completed = !task.completed;
+    this.updateTask.emit(task);
+  }
+
+
+  onSelectCategory(category: Category) {
+    this.selectCategory.emit(category);
   }
 }
