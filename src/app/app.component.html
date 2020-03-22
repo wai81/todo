@@ -2,7 +2,6 @@
 
   <app-categories
     (selectCategory)="onSelectCategory($event)"
-
     (deleteCategory)="onDeleteCategory($event)"
     (updateCategory)="onUpdateCategory($event)"
 
@@ -84,14 +83,15 @@
         <div class="row">
           <div class="col-12">
             <app-tasks
+              (addTask)="onAddTask($event)"
               (deleteTask)="onDeleteTask($event)"
               (filterByPriority)="onFilterTasksByPriority($event)"
               (filterByStatus)="onFilterTasksByStatus($event)"
 
-
-              (filterByTitle)="onSearchTasks($event)"
               (selectCategory)="onSelectCategory($event)"
+              (filterByTitle)="onSearchTasks($event)"
               (updateTask)="onUpdateTask($event)"
+              [selectedCategory]="selectedCategory"
 
               [priorities]="priorities"
               [tasks]="tasks"

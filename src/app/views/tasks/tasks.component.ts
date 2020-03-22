@@ -44,14 +44,13 @@ export class TasksComponent implements OnInit {
   @Output()
   filterByPriority = new EventEmitter<Priority>();
 
+  @Output()
+  addTask = new EventEmitter<Task>();
+
   // поиск
-  searchTaskText: string;
-  selectedStatusFilter: boolean = null;
-  selectedPriorityFilter: Priority = null;
-
-  // текущее значение для поиска задач
-
-  // при нажатии на категорию из списка задач
+  searchTaskText: string; // текущее значение для поиска задач
+  selectedStatusFilter: boolean = null; // при нажатии на категорию из списка задач
+  selectedPriorityFilter: Priority = null; // фильтр по приоритету
 
 // текущие задачи для отображения на странице
   @Input('tasks')
@@ -65,6 +64,9 @@ export class TasksComponent implements OnInit {
   set setPriorities(priorities: Priority[]) {
     this.priorities = priorities;
   }
+
+  @Input()
+  selectedCategory: Category;
 
   constructor(private dataHandler: DataHandlerService, // доступ к данным
               private dialog: MatDialog // работа с диалогом
@@ -123,16 +125,6 @@ export class TasksComponent implements OnInit {
       }
 
     });
-  }
-
-  getPriorityClolr(task: Task): string {
-    if (task.completed) {
-      return '#F8F9FA';
-    }
-    if (task.priority && task.priority.color) {
-      return task.priority.color;
-    }
-    return '#fff';
   }
 
   // показывает задачи с применением всех текущий условий (категория, поиск, фильтры и пр.)
@@ -217,5 +209,16 @@ export class TasksComponent implements OnInit {
       this.selectedPriorityFilter = value;
       this.filterByPriority.emit(this.selectedPriorityFilter);
     }
+  }
+
+  openAddTaskDialog() {
+    const task = new Task(null, '', false, null, this.selectedCategory);
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Добавление задачи']});
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { // если нажали на ОК и есть резултат
+        this.addTask.emit(task);
+      }
+    });
   }
 }
