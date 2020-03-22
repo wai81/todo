@@ -8,8 +8,8 @@ import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component
   styleUrls: ['./edit-category-dialog.component.css']
 })
 export class EditCategoryDialogComponent implements OnInit {
-  private categoryTitle: string;
-  private dialogTitle: string;
+  categoryTitle: string;
+  dialogTitle: string;
 
   constructor(
     private dialogRef: MatDialogRef<EditCategoryDialogComponent>,

@@ -83,11 +83,20 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <app-tasks (updateTask)="onUpdateTask($event)"
-                       (deleteTask)="onDeleteTask($event)"
-                       (selectCategory)="onSelectCategory($event)"
+            <app-tasks
+              (deleteTask)="onDeleteTask($event)"
+              (filterByPriority)="onFilterTasksByPriority($event)"
+              (filterByStatus)="onFilterTasksByStatus($event)"
 
-                       [tasks]="tasks"></app-tasks>
+
+              (filterByTitle)="onSearchTasks($event)"
+              (selectCategory)="onSelectCategory($event)"
+              (updateTask)="onUpdateTask($event)"
+
+              [priorities]="priorities"
+              [tasks]="tasks"
+
+            ></app-tasks>
           </div>
         </div>
       </div>

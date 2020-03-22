@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 import {Category} from '../../model/Category';
+import {Priority} from '../../model/Priority';
 
 @Component({
   selector: 'app-tasks',
@@ -23,6 +24,7 @@ export class TasksComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   tasks: Task[];
+  priorities: Priority[];
 
   @Output()
   deleteTask = new EventEmitter<Task>();
@@ -31,7 +33,25 @@ export class TasksComponent implements OnInit {
   updateTask = new EventEmitter<Task>();
 
   @Output()
-  selectCategory = new EventEmitter<Category>(); // при нажатии на категорию из списка задач
+  selectCategory = new EventEmitter<Category>();
+
+  @Output()
+  filterByStatus = new EventEmitter<boolean>();
+
+  @Output()
+  filterByTitle = new EventEmitter<string>();
+
+  @Output()
+  filterByPriority = new EventEmitter<Priority>();
+
+  // поиск
+  searchTaskText: string;
+  selectedStatusFilter: boolean = null;
+  selectedPriorityFilter: Priority = null;
+
+  // текущее значение для поиска задач
+
+  // при нажатии на категорию из списка задач
 
 // текущие задачи для отображения на странице
   @Input('tasks')
@@ -39,6 +59,11 @@ export class TasksComponent implements OnInit {
     // не присваевается значение напрямую только через @Input
     this.tasks = tasks;
     this.fillTable();
+  }
+
+  @Input('priorities')
+  set setPriorities(priorities: Priority[]) {
+    this.priorities = priorities;
   }
 
   constructor(private dataHandler: DataHandlerService, // доступ к данным
@@ -98,6 +123,16 @@ export class TasksComponent implements OnInit {
       }
 
     });
+  }
+
+  getPriorityClolr(task: Task): string {
+    if (task.completed) {
+      return '#F8F9FA';
+    }
+    if (task.priority && task.priority.color) {
+      return task.priority.color;
+    }
+    return '#fff';
   }
 
   // показывает задачи с применением всех текущий условий (категория, поиск, фильтры и пр.)
@@ -160,5 +195,27 @@ export class TasksComponent implements OnInit {
 
   onSelectCategory(category: Category) {
     this.selectCategory.emit(category);
+  }
+
+  // фильтрация по названию
+  onFilterByTitle() {
+    this.filterByTitle.emit(this.searchTaskText);
+  }
+
+  // фильтррация по статусу
+  onFilterByStatus(value: boolean) {
+    // на всякий случай проверяем изменилось ли значение (хотя сам UI компонент должен это делать)
+    if (value !== this.selectedStatusFilter) {
+      this.selectedStatusFilter = value;
+      this.filterByStatus.emit(this.selectedStatusFilter);
+    }
+  }
+
+  onFilterByPriority(value: Priority) {
+
+    if (value !== this.selectedPriorityFilter) {
+      this.selectedPriorityFilter = value;
+      this.filterByPriority.emit(this.selectedPriorityFilter);
+    }
   }
 }

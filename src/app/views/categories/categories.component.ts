@@ -28,7 +28,7 @@ export class CategoriesComponent implements OnInit {
   selectedCategory: Category;
 
   // для отображения иконки редактирования при наведении на категорию
-  private indexMouseMove: number;
+  indexMouseMove: number;
 
 
   constructor(private dataHandler: DataHandlerService,

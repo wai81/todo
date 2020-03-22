@@ -53,9 +53,24 @@ export class TaskDAOArray implements TaskDAO {
 
     let allTasks = TestData.tasks;
 
+    if (status != null) {
+      allTasks = allTasks.filter(tasks => tasks.completed === status);
+    }
+
     if (category != null) {
       allTasks = allTasks.filter(tasks => tasks.category === category);
     }
+
+    if (priority != null) {
+      allTasks = allTasks.filter(tasks => tasks.priority === priority);
+    }
+
+    if (searchText != null) {
+      allTasks = allTasks.filter(
+        tasks => tasks.title.toUpperCase().includes(searchText.toUpperCase())
+      );
+    }
+
     return allTasks; // отфильтрованный массив
   }
 

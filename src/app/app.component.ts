@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Task} from './model/Task';
 import {DataHandlerService} from './service/data-handler.service';
 import {Category} from './model/Category';
+import {Priority} from './model/Priority';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,17 @@ export class AppComponent implements OnInit {
   title = 'Todo';
   tasks: Task[];
   categories: Category[];
+  priorities: Priority[];
 
   selectedCategory: Category = null;
+
+  // поиск
+  searchTaskText = ''; // текущее значение для поиска задач
+
+  // фильтрация
+  priorityFilter: Priority;
+  statusFilter: boolean;
+
 
   constructor(private dataHandler: DataHandlerService) {
   }
@@ -21,6 +31,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
+    this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
     this.onSelectCategory(null);
   }
 
@@ -28,44 +39,23 @@ export class AppComponent implements OnInit {
   onSelectCategory(category: Category) {
 
     this.selectedCategory = category;
-
-    this.dataHandler.searchTasks(
-      this.selectedCategory,
-      null,
-      null,
-      null
-    ).subscribe(tasks => {
-      this.tasks = tasks;
-    });
-
+    this.updateTasks();
 
   }
 
   // обновление задачи
   onUpdateTask(task: Task) {
-    this.dataHandler.updateTask(task).subscribe(() => {
 
-      this.dataHandler.searchTasks(
-        this.selectedCategory,
-        null,
-        null,
-        null
-      ).subscribe(tasks => {
-        this.tasks = tasks;
-      });
+    this.dataHandler.updateTask(task).subscribe(cat => {
+      this.updateTasks();
     });
+
   }
+
 
   onDeleteTask(task: Task) {
     this.dataHandler.deleteTask(task.id).subscribe(() => {
-      this.dataHandler.searchTasks(
-        this.selectedCategory,
-        null,
-        null,
-        null
-      ).subscribe(tasks => {
-        this.tasks = tasks;
-      });
+      this.updateTasks();
     });
   }
 
@@ -84,4 +74,35 @@ export class AppComponent implements OnInit {
       this.onSelectCategory(this.selectedCategory);
     });
   }
+
+  // поиск задач
+  onSearchTasks(searchString: string) {
+    this.searchTaskText = searchString;
+    this.updateTasks();
+  }
+
+  // фильтрация задач по статусу (все, решенные, нерешенные)
+  onFilterTasksByStatus(status: boolean) {
+    this.statusFilter = status;
+    this.updateTasks();
+  }
+
+  onFilterTasksByPriority(priority: Priority) {
+    this.priorityFilter = priority;
+    this.updateTasks();
+  }
+
+  private updateTasks() {
+    this.dataHandler.searchTasks(
+      this.selectedCategory,
+      this.searchTaskText,
+      this.statusFilter,
+      this.priorityFilter
+    ).subscribe((tasks: Task[]) => {
+      this.tasks = tasks;
+    });
+
+  }
+
+
 }
