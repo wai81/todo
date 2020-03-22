@@ -36,6 +36,7 @@
   <div
     class="col-12 text-center">
     <button
+      *ngIf="canDelete()"
       (click)="delete()"
       class="red" mat-button>
       Удалить

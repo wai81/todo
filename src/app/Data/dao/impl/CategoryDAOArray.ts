@@ -4,8 +4,12 @@ import {Observable, of} from 'rxjs';
 import {TestData} from '../../TestData';
 
 export class CategoryDAOArray implements CategoryDAO {
-  add(T): Observable<Category> {
-    return undefined;
+  add(category: Category): Observable<Category> {
+    if (category.id === null || category.id === 0) {
+      category.id = this.getLastIdCategory();
+    }
+    TestData.categories.push(category);
+    return of(category);
   }
 
   delete(id: number): Observable<Category> {
@@ -37,5 +41,10 @@ export class CategoryDAOArray implements CategoryDAO {
     const tmpCategory = TestData.categories.find(c => c.id === category.id); // обновляем id
     TestData.categories.splice(TestData.categories.indexOf(tmpCategory), 1, category);
     return of(tmpCategory);
+  }
+
+// находит последний id (чтобы потом вставить новую запись с id, увеличенным на 1) - в реальной БД это происходит автоматически
+  private getLastIdCategory(): number {
+    return Math.max.apply(Math, TestData.categories.map(cat => cat.id)) + 1;
   }
 }

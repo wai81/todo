@@ -9,6 +9,7 @@ import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-d
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 import {Category} from '../../model/Category';
 import {Priority} from '../../model/Priority';
+import {OperType} from '../../dialog/OperType';
 
 @Component({
   selector: 'app-tasks',
@@ -25,6 +26,7 @@ export class TasksComponent implements OnInit {
 
   tasks: Task[];
   priorities: Priority[];
+  operType: OperType;
 
   @Output()
   deleteTask = new EventEmitter<Task>();
@@ -98,7 +100,8 @@ export class TasksComponent implements OnInit {
   // диалоговое окно для редактирования и добавления задачи
   openEditTaskDialog(task: Task): void {
 
-    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Редактирование задачи'], autoFocus: false});
+    const dialogRef = this.dialog.open(EditTaskDialogComponent,
+      {data: [task, 'Редактирование задачи', OperType.EDIT], autoFocus: false});
 
     dialogRef.afterClosed().subscribe(result => {
       // обработка результата
@@ -213,7 +216,8 @@ export class TasksComponent implements OnInit {
 
   openAddTaskDialog() {
     const task = new Task(null, '', false, null, this.selectedCategory);
-    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Добавление задачи']});
+    const dialogRef = this.dialog.open(EditTaskDialogComponent,
+      {data: [task, 'Добавление задачи', OperType.ADD]});
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) { // если нажали на ОК и есть резултат

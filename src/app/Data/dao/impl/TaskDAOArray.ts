@@ -6,6 +6,7 @@ import {Priority} from '../../../model/Priority';
 import {TestData} from '../../TestData';
 
 export class TaskDAOArray implements TaskDAO {
+
   add(task: Task): Observable<Task> {
     if (task.id === null || task.id === 0) {
       task.id = this.getLastIdTask();
