@@ -18,8 +18,33 @@
     </span>
 
   </div>
+
   <div class="sidebar-wrapper">
     <ul class="nav">
+      <!--     Поиск категори -->
+      <div class="search-category-area">
+        <mat-form-field class="example-full-width">
+          <input
+              #inputSearchCategory
+              (keydown.escape)="searchCategoryTitle = ''; search()"
+              (keyup)="search()"
+              [(ngModel)]="searchCategoryTitle"
+
+              matInput
+              maxlength="256"
+              placeholder="Поиск категорий"
+          />
+          <button
+            (click)="searchCategoryTitle = ''; search()"
+            *ngIf="inputSearchCategory.value.trim().length > 0"
+            aria-label="Clear" class="search-category-button size25 gray" mat-button
+            mat-icon-button
+            matSuffix
+          >
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
       <!--  Все категории    -->
       <li (click)="showTasksByCategory(null)" [class.active]="selectedCategory === null" class="nav-item category">
         <a class="nav-link pointer">
@@ -30,6 +55,8 @@
       <!--  разделитель     -->
       <div class="line"></div>
 
+      <div *ngIf="categories.length === 0"><p class="not-found">Ничего не найдено</p></div>
+
       <li
         (click)="showTasksByCategory(category)" (mouseenter)="showEditIcon(index)"
 
@@ -38,14 +65,11 @@
         *ngFor="let category of categories; let index = index "
         [class.active]="category === selectedCategory "
 
-          class="nav-item pointer"
+        class="nav-item pointer"
       >
         <a class="nav-link">
-
           <!--         название категории-->
           <span class="category-title">{{category.title}}</span>
-
-
           <!--         иконка редактирования категории-->
           <span class="edit-category-icon-area">
             <mat-icon

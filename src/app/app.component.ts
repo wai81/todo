@@ -12,18 +12,18 @@ import {Priority} from './model/Priority';
 export class AppComponent implements OnInit {
   title = 'Todo';
   tasks: Task[];
-  categories: Category[];
-  priorities: Priority[];
+  categories: Category[]; // все категории
+  priorities: Priority[]; // все приоритеты
 
   selectedCategory: Category = null;
 
   // поиск
   searchTaskText = ''; // текущее значение для поиска задач
+  searchCategoryText = ''; // текущее значение для поиска категорий
 
   // фильтрация
   priorityFilter: Priority;
   statusFilter: boolean;
-
 
   constructor(private dataHandler: DataHandlerService) {
   }
@@ -111,6 +111,7 @@ export class AppComponent implements OnInit {
     });
   }
 
+  // добавление категории
   onAddCategory(title: string) {
     this.dataHandler.addCategory(title).subscribe(
       () => this.updateCategory());
@@ -120,5 +121,15 @@ export class AppComponent implements OnInit {
 
     this.dataHandler.getAllCategories().subscribe(
       categories => this.categories = categories);
+  }
+
+  // поиск категории
+  onSearchCategory(title: string) {
+
+    this.searchCategoryText = title;
+
+    this.dataHandler.searchCategories(title).subscribe(cat => {
+      this.categories = cat;
+    });
   }
 }

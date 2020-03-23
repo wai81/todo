@@ -15,29 +15,40 @@ export class CategoriesComponent implements OnInit {
   @Input()
   categories: Category[];
 
+  @Input()
+  selectedCategory: Category;
+
   // Выбрали категорию из списка
   @Output()
   selectCategory = new EventEmitter<Category>();
+
   // удаление категории
   @Output()
   deleteCategory = new EventEmitter<Category>();
+
   // изменре категории
   @Output()
   updateCategory = new EventEmitter<Category>();
 
+  // добавили категорию
   @Output()
   addCategory = new EventEmitter<string>();
 
-  @Input()
-  selectedCategory: Category;
+  // поиск категории
+  @Output()
+  searchCategory = new EventEmitter<string>(); // передаем строку для поиска
+
 
   // для отображения иконки редактирования при наведении на категорию
   indexMouseMove: number;
-  operType: OperType;
+
+  searchCategoryTitle: string; // текущее значение для поиска категорий
 
 
   constructor(private dataHandler: DataHandlerService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog // внедряем MatDialog, чтобы работать с диалоговыми окнами
+
+  ) {
   }
 
   ngOnInit() {
@@ -96,5 +107,12 @@ export class CategoriesComponent implements OnInit {
         this.addCategory.emit(result as string); // вызываем внешний обработчик
       }
     });
+  }
+
+  search() {
+    if (this.searchCategoryTitle == null) {
+      return;
+    }
+    this.searchCategory.emit(this.searchCategoryTitle);
   }
 }

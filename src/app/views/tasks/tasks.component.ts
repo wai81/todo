@@ -82,7 +82,8 @@ export class TasksComponent implements OnInit {
     // в него присваивается любой источник (БД, массивы, JSON и пр.)
     this.dataSource = new MatTableDataSource();
 
-    this.fillTable();
+    // this.fillTable();
+    this.onSelectCategory(null);
   }
 
   // в зависимости от статуса задачи - вернуть цвет названия
