@@ -21,20 +21,24 @@
     <div class="content">
       <div class="container-fluid">
 
-        <app-stat></app-stat>
+        <app-stat>
+
+        </app-stat>
 
         <div class="row">
           <div class="col-12">
             <app-tasks
+              (filterByPriority)="onFilterTasksByPriority($event)"
               (addTask)="onAddTask($event)"
               (deleteTask)="onDeleteTask($event)"
-              (filterByPriority)="onFilterTasksByPriority($event)"
-              (filterByStatus)="onFilterTasksByStatus($event)"
 
               (selectCategory)="onSelectCategory($event)"
-              (filterByTitle)="onSearchTasks($event)"
-              (updateTask)="onUpdateTask($event)"
+
               [selectedCategory]="selectedCategory"
+              (filterByStatus)="onFilterTasksByStatus($event)"
+              (filterByTitle)="onSearchTasks($event)"
+
+              (updateTask)="onUpdateTask($event)"
 
               [priorities]="priorities"
               [tasks]="tasks"

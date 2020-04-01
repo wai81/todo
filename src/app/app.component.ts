@@ -25,38 +25,22 @@ export class AppComponent implements OnInit {
   priorityFilter: Priority;
   statusFilter: boolean;
 
-  constructor(private dataHandler: DataHandlerService) {
+  constructor(
+    private dataHandler: DataHandlerService, // фасад для работы с данными
+  ) {
   }
 
   ngOnInit(): void {
     // this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
     this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
-    this.onSelectCategory(null);
+    this.onSelectCategory(null); // показать все задачи если невыбрнна категория
   }
 
-  // изменение категории
+  // выбор категории
   onSelectCategory(category: Category) {
-
     this.selectedCategory = category;
     this.updateTasks();
-
-  }
-
-  // обновление задачи
-  onUpdateTask(task: Task) {
-
-    this.dataHandler.updateTask(task).subscribe(cat => {
-      this.updateTasks();
-    });
-
-  }
-
-
-  onDeleteTask(task: Task) {
-    this.dataHandler.deleteTask(task.id).subscribe(() => {
-      this.updateTasks();
-    });
   }
 
   // удаление категории
@@ -75,6 +59,29 @@ export class AppComponent implements OnInit {
     });
   }
 
+  // обновление задачи
+  onUpdateTask(task: Task) {
+
+    this.dataHandler.updateTask(task).subscribe(cat => {
+      this.updateTasks();
+    });
+
+  }
+
+  // добавление задачи
+  onAddTask(task: Task) {
+    this.dataHandler.addTask(task).subscribe(result => {
+      this.updateTasks();
+    });
+  }
+
+  // удаление Задачи
+  onDeleteTask(task: Task) {
+    this.dataHandler.deleteTask(task.id).subscribe(() => {
+      this.updateTasks();
+    });
+  }
+
   // поиск задач
   onSearchTasks(searchString: string) {
     this.searchTaskText = searchString;
@@ -87,6 +94,7 @@ export class AppComponent implements OnInit {
     this.updateTasks();
   }
 
+  // фильтрация задач по приоритету
   onFilterTasksByPriority(priority: Priority) {
     this.priorityFilter = priority;
     this.updateTasks();
@@ -102,13 +110,6 @@ export class AppComponent implements OnInit {
       this.tasks = tasks;
     });
 
-  }
-
-
-  onAddTask(task: Task) {
-    this.dataHandler.addTask(task).subscribe(result => {
-      this.updateTasks();
-    });
   }
 
   // добавление категории

@@ -21,8 +21,8 @@ export class TasksComponent implements OnInit {
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   dataSource: MatTableDataSource<Task>; // контейнер - источник данных для таблицы
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   tasks: Task[];
   priorities: Priority[];
@@ -35,7 +35,7 @@ export class TasksComponent implements OnInit {
   updateTask = new EventEmitter<Task>();
 
   @Output()
-  selectCategory = new EventEmitter<Category>();
+  selectCategory = new EventEmitter<Category>(); // нажали на категорию из списка задач
 
   @Output()
   filterByStatus = new EventEmitter<boolean>();
@@ -154,16 +154,18 @@ export class TasksComponent implements OnInit {
           return task.date ? task.date : null;
         }
         case 'title' : {
-          return task.title ? task.title : null;
+          // return task.title ? task.title : null;
+          return task.title;
         }
-
       }
     };
   }
 
   private addTableObjects(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+
+    this.dataSource.paginator = this.paginator; // обновить компонент постраничности (кол-во записей, страниц)
+    this.dataSource.sort = this.sort; // компонент для сортировки данных (если необходимо)
+
   }
 
   // диалоговое окно подтверждения удаления
