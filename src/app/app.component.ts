@@ -31,6 +31,9 @@ export class AppComponent implements OnInit {
   completedCountInCategory: number;
   uncompletedCountInCategory: number;
   uncompletedTotalTasksCount: number;
+  showStat = true;
+
+
 
   constructor(
     private dataHandler: DataHandlerService, // фасад для работы с данными
@@ -159,5 +162,9 @@ export class AppComponent implements OnInit {
         this.uncompletedCountInCategory = array[2];
         this.uncompletedTotalTasksCount = array[3]; // нужно для категории все
       });
+  }
+
+  toggleStat(showStat: boolean) {
+    this.showStat = showStat;
   }
 }
