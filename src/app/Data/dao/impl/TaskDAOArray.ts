@@ -31,19 +31,19 @@ export class TaskDAOArray implements TaskDAO {
   }
 
   getCompletedCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(this.searchTasks(category, null, true, null).length);
   }
 
   getTotalCount(): Observable<number> {
-    return undefined;
+    return of(TestData.tasks.length);
   }
 
   getTotalCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(this.searchTasks(category, null, null, null).length);
   }
 
   getUncompletedCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(this.searchTasks(category, null, false, null).length);
   }
 
   // поиск задач по параметрам
@@ -92,5 +92,7 @@ export class TaskDAOArray implements TaskDAO {
   private getLastIdTask(): number {
     return Math.max.apply(Math, TestData.tasks.map(task => task.id)) + 1;
   }
+
+
 }
 

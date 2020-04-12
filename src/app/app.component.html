@@ -20,13 +20,18 @@
 
     <div class="content">
       <div class="container-fluid">
-
-        <app-stat>
+        <!--Статистика-->
+        <app-stat
+          [completeTaskInCategory]="completedCountInCategory"
+          [totalTaskInCategory]="totalTaskCountInCategory"
+          [uncompleteTaskInCategory]="uncompletedCountInCategory"
+        >
 
         </app-stat>
 
         <div class="row">
           <div class="col-12">
+            <!--Задачи-->
             <app-tasks
               (filterByPriority)="onFilterTasksByPriority($event)"
               (addTask)="onAddTask($event)"
