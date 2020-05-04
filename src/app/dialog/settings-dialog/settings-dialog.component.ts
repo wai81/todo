@@ -27,4 +27,20 @@ export class SettingsDialogComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
+  // т.к. мы меняем значения в массивах, то изменения сразу отражаются на списке задач (не требуется доп. обновления)
+
+  // добавили приоритет
+  private onAddPriority(priority: Priority): void {
+    this.dataHandler.addPriority(priority).subscribe();
+  }
+
+  // удалили приоритет
+  private onDeletePriority(priority: Priority): void {
+    this.dataHandler.deletePriority(priority.id).subscribe();
+  }
+
+  // обновили приоритет
+  private onUpdatePriority(priority: Priority): void {
+    this.dataHandler.updatePriority(priority).subscribe();
+  }
 }

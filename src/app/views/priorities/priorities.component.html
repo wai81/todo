@@ -16,13 +16,13 @@
     </div>
 
     <div class="col-1 text-left">
-      <p class="pointer gray">
+      <p (click)="delete(priority)" class="pointer gray">
         <mat-icon>delete</mat-icon>
       </p>
     </div>
 
     <div class="col-1 text-left">
-      <p class="pointer gray">
+      <p (click)="onEditPriority(priority)" class="pointer gray">
         <mat-icon>edit</mat-icon>
       </p>
     </div>
@@ -34,7 +34,7 @@
 </div>
 
 
-<p class="link little">
+<p (click)="onAddPriority()" class="link little">
   Добавить приоритет
 </p>
 
